@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { React, useState, useEffect } from "react";
+
+import axios from "axios";
 
 function App() {
+  const [recipeList, setrecipeList] = useState([]);
+
+  useEffect(() => {
+    getRecipes();
+  }, []);
+
+  const getRecipes = async () => {
+    const result = await axios.get(
+      "https://masak-apa-tomorisakura.vercel.app" + "/api/recipes"
+    );
+    if (result && result.data && result.data.results) {
+      setrecipeList(result.data.results);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+        {
+          recipeList.map((item) => {
+            return (<><p>{item.title}</p><hr/></>)
+          })
+        }
     </div>
   );
 }
